@@ -1,0 +1,122 @@
+[data-bs-theme="dark"] .nav-pills .nav-link.active,
+[data-bs-theme="dark"] .nav-pills .show>.nav-link {
+  background-color: var(--bs-white);
+  color: var(--bs-primary);
+}
+
+:root {
+  --header-height: 3.5rem;
+
+  /*========== Colors ==========*/
+  /*Color mode HSL(hue, saturation, lightness)*/
+  --hot-color: hsl(0, 84%, 62%);
+  --title-color: hsl(158, 75%, 28%);
+  --text-color: hsl(0, 0%, 27%);
+  --body-color: hsl(0, 10%, 96%);
+  --container-color: hsl(0, 0%, 100%);
+  --border-color: hsl(0, 0%, 89%);
+  --bg-color: hsl(40, 79%, 61%);
+  /*========== Font and typography ==========*/
+  /*.5rem = 8px | 1rem = 16px ...*/
+  --title-font: "Dancing Script", sans-serif;
+  --body-font: "Cabin", sans-serif;
+  --h2-font-size: 1.25rem;
+  --normal-font-size: 0.938rem;
+
+  /*========== Font weight ==========*/
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semi-bold: 600;
+
+  /*========== z index ==========*/
+  --z-fixed: 100;
+  --z-modal: 1000;
+}
+
+/* Categories */
+.zoom-container {
+  overflow: hidden;
+  position: relative;
+}
+
+.zoom-container img {
+  transition: transform 0.3s ease;
+  width: 100%;
+  height: auto;
+}
+
+.zoom-container:hover img {
+  transform: scale(1.4);
+}
+
+.cate_section {
+  /* padding: 0 12px; */
+}
+
+.cate_section>nav {
+  background-color: var(--container-color);
+  /* border-radius: 5px; */
+  height: fit-content;
+}
+
+.cate_section>nav>ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.cate_section>nav>ul>li {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.cate_section>nav>ul>li>div:nth-child(2) {
+  height: 5px;
+  width: 100%;
+  background-color: var(--border-color);
+  transition: 0.5s;
+  margin-bottom: 20px;
+}
+
+.cate_section>nav>ul>li:first-child>div:nth-child(2) {
+  border-radius: 3px 0 0 3px;
+}
+
+.cate_section>nav>ul>li:last-child>div:nth-child(2) {
+  border-radius: 0 3px 3px 0;
+}
+
+.cate_section>nav>ul>li:hover>div:nth-child(2) {
+  background-color: var(--bg-color);
+}
+
+.cate_section>nav>ul>li>div:nth-child(1) {
+  padding: 20px 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.cate_section>nav>ul>li>div:nth-child(1)>a>div {
+  width: 100px;
+  height: 100px;
+  background-color: var(--body-color);
+  border-radius: 50%;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cate_section>nav>ul>li>div:nth-child(1)>a>div>img {
+  width: 60%;
+}
+
+.cate_section>nav>ul>li>div:nth-child(1)>p {
+  font-weight: 700;
+  color: var(--body-font);
+}

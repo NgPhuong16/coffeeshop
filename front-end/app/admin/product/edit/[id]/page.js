@@ -1,0 +1,138 @@
+"use client";
+
+import { useFormik } from "formik";
+import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
+import useSWR from "swr";
+
+export default function ProductEdit(params) {
+    const fetcher = (...agrs) => fetch(...agrs).then((res) => res.json());
+    const { data: categoryList, error: errorCategory, isLoading: isLoadingCategory } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/categories`, fetcher);
+    const { data: product, error: errorProduct, isLoading: isLoadingProduct } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/products/id/${params.id}`, fetcher);
+    const router = useRouter();
+    const [formValue, setFormValue] = useState();
+    const formik = useFormik({
+        initialValues: {
+            name: "",
+            description: "",
+            categoryId: "",
+            price: 0,
+            image: null,
+        },
+        onSubmit: (value) => {
+            setFormValue(value);
+            const formData = new FormData();
+            formData.append("name", value.name);
+            formData.append("description", value.description);
+            formData.append("categoryId", value.categoryId);
+            formData.append("price", value.price);
+            formData.append("image", value.image);
+            try {
+                fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`, {
+                    method: "POST",
+                    body: formData
+                }).then((res) => {
+                    router.push("/admin/product")
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        },
+    });
+    if (errorCategory || errorProduct) return <strong>Có lỗi xảy ra</strong>
+    if (isLoadingCategory || isLoadingProduct) return <strong>Đang load</strong>
+
+    return (
+        <>
+            <div className="d-flex justify-content-between">
+                <h3 className="mb-4">Add Product</h3>
+                <div>
+                    <a href="#" className="btn btn-outline-secondary rounded-0">
+                        <i className="far fa-long-arrow-left"></i> Back
+                    </a>
+                </div>
+            </div>
+            <form className="row" action="" method="POST" onSubmit={formik.handleSubmit} enctype="multipart/form-data" >
+                <div className="col-md-8 mb-4">
+                    <div className="card rounded-0 border-0 shadow-sm mb-4">
+                        <div className="card-body">
+                            <h6 className="pb-3 border-bottom">Basic Info</h6>
+                            <div className="mb-3">
+                                <label for="name" className="form-label">Name *</label>
+                                <input onChange={formik.handleChange} name="name" type="text" className="form-control rounded-0" id="name" required />
+                            </div>
+                            <div className="mb-3">
+                                <label for="description" className="form-label">Description</label>
+                                <textarea onChange={formik.handleChange} name="description" className="form-control rounded-0" id="description" rows="6"></textarea>
+                            </div>
+                            <div className="row">
+
+                                <div className="col mb-3">
+                                    <label for="categoryId" className="form-label">Category *</label>
+                                    <div className="input-group">
+                                        <select onChange={formik.handleChange} name="categoryId" className="form-select rounded-0" id="categoryId" required>
+                                            <option disabled selected>Chọn danh mục</option>
+
+                                            {
+                                                categoryList.map(item => {
+                                                    return (
+                                                        <>
+                                                            <option key={item._id} value={item._id}>{item.name}</option>
+                                                        </>
+                                                    )
+                                                })
+                                            }
+                                        </select>
+                                        <button type="button" className="btn btn-outline-primary rounded-0">
+                                            <i className="fal fa-boxes"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="card rounded-0 border-0 shadow-sm">
+                        <div className="card-body">
+                            <h6 className="pb-3 border-bottom">Price</h6>
+                            <div className="row">
+                                <div className="col mb-3">
+                                    <label for="price" className="form-label">Price *</label>
+                                    <input onChange={formik.handleChange} name="price" type="number" className="form-control rounded-0" id="price" min="0" required />
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-md-4 mb-4">
+                    <div className="card rounded-0 border-0 shadow-sm">
+                        <div className="card-body">
+                            <h6 className="pb-3 border-bottom">Image</h6>
+                            <div className="mb-3">
+                                <label for="image" className="form-label">Product Image *</label>
+                                <input onChange={(event) => {
+                                    formik.setFieldValue("image", event.currentTarget.files[0]);
+                                }}
+                                    name="image" className="form-control rounded-0" type="file" id="image" />
+                                <div className="bg-secondary-subtle mb-3 p-2 text-center">
+                                    <img src="assets/img/products/iphone.webp" className="w-50" />
+                                </div>
+                            </div>
+                            <div className="mb-3">
+                                <label for="images" className="form-label">More Product Image</label>
+                                <input className="form-control rounded-0" type="file" id="images" multiple />
+                                <div className="bg-secondary-subtle mb-3 p-2 text-center d-flex">
+                                    <img src="assets/img/products/iphone.webp" className="w-25" />
+                                    <img src="assets/img/products/iphone.webp" className="w-25" />
+                                    <img src="assets/img/products/iphone.webp" className="w-25" />
+                                    <img src="assets/img/products/iphone.webp" className="w-25" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" className="btn btn-primary btn-lg rounded-0 mt-4 w-100">Create Product</button>
+                </div >
+            </form >
+        </>
+    );
+}
